@@ -1,0 +1,66 @@
+name: "STAGING ENV: Snowflake Terraform Demo Workflow"
+
+on:
+  push:
+    branches:
+      - staging
+
+jobs:
+  deploy-terraform-staging:
+    name: "Plan & Deploy Terraform plan on Staging"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read          # required for google-github-actions/auth
+      id-token: write         # enables GitHub OIDC for Workload Identity Federation
+      pull-requests: write    # kept from your original (even though not used here)
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Authenticate to Google Cloud using OIDC (short-lived credentials)
+      - id: auth
+        name: "Authenticate to Google Cloud"
+        uses: google-github-actions/auth@v3
+        with:
+          project_id: fluted-clock-476607-s7
+          workload_identity_provider: projects/123456789012/locations/global/workloadIdentityPools/YOUR_POOL_ID/providers/YOUR_PROVIDER_ID
+          service_account: terraform-ci@fluted-clock-476607-s7.iam.gserviceaccount.com
+          create_credentials_file: true   # creates a file for ADC
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform Init
+        id: init
+        env:
+          # Ensure Terraform (GCS backend) uses the short-lived Google creds
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
+        run: |
+          # If you keep backend settings in ./staging/backend.hcl, use:
+          # terraform -chdir=./staging init -reconfigure -backend-config=backend.hcl
+          terraform -chdir=./staging init
+
+      - name: Terraform Format
+        id: fmt
+        run: terraform -chdir=./staging fmt -recursive -check
+
+      - name: Terraform Validate
+        id: validate
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
+        run: terraform -chdir=./staging validate -no-color
+
+      - name: Terraform Plan
+        id: plan
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
+          TF_VAR_snowflake_private_key: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+        run: terraform -chdir=./staging plan -no-color -input=false
+
+      - name: Terraform Apply
+        id: apply
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
+          TF_VAR_snowflake_private_key: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+        run: terraform -chdir=./staging apply -auto-approve -input=false

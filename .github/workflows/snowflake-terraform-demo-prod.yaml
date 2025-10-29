@@ -1,0 +1,102 @@
+name: "PRODUCTION ENV: Snowflake Terraform Demo Workflow"
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  deploy-terraform-prod:
+    name: "Deploy Terraform plan on Prod"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read               # required by auth action docs
+      id-token: write              # OIDC for Workload Identity Federation
+      pull-requests: write         # keep for PR comment
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Authenticate to Google Cloud (WIF)
+      - id: auth
+        name: "Authenticate to Google Cloud"
+        uses: google-github-actions/auth@v3
+        with:
+          project_id: fluted-clock-476607-s7
+          workload_identity_provider: projects/123456789012/locations/global/workloadIdentityPools/GITHUB/pools/default/providers/GITHUB
+          service_account: terraform-ci@fluted-clock-476607-s7.iam.gserviceaccount.com
+          create_credentials_file: true   # makes a creds file for ADC (used by Terraform)
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform Init
+        id: init
+        env:
+          # Ensure Terraform (GCS backend) picks up the short-lived creds
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
+        run: |
+          # If you use per-env backend.hcl, add: -reconfigure -backend-config=backend.hcl
+          terraform -chdir=./prod init
+
+      - name: Terraform Format
+        id: fmt
+        run: terraform -chdir=./prod fmt -recursive -check
+
+      - name: Terraform Validate
+        id: validate
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
+        run: terraform -chdir=./prod validate -no-color
+
+      - name: Terraform Plan on Prod for PR
+        id: plan
+        if: github.event_name == 'pull_request'
+        continue-on-error: true
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
+          TF_VAR_snowflake_private_key: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+        run: terraform -chdir=./prod plan -no-color -input=false
+
+      - name: Update Pull Request
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        env:
+          PLAN: "${{ steps.plan.outputs.stdout }}"
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+            #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
+
+            <details><summary>Show Plan</summary>
+
+            \`\`\`terraform
+            ${process.env.PLAN}
+            \`\`\`
+
+            </details>
+
+            *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
+
+      - name: Terraform Plan Status
+        if: steps.plan.outcome == 'failure'
+        run: exit 1
+
+      - name: Terraform Apply
+        id: apply
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
+          TF_VAR_snowflake_private_key: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+        run: terraform -chdir=./prod apply -auto-approve -input=false
