@@ -1,21 +1,55 @@
-# Demo Snowflake CI/CD pipeline with GitHub Actions and Google Cloud Storage backend.
 
-Step 1
+# 🚀 Snowflake CI/CD with Terraform, GitHub Actions & Google Cloud Storage
+
+This repository demonstrates a **CI/CD pipeline** for **Snowflake** using **Terraform** and **GitHub Actions**, with **Google Cloud Storage (GCS)** as the Terraform **remote state backend**.
+
+- Fully Google Cloud–based backend.
+- Production & Staging workflows powered by GitHub Actions.
+- Secure auth via Private Key under GitHub Actions.
+
+---
+
+## ⚡️ Quick Start (Local Run)
+
+# 1. 
+
+Clone the repository
+git clone https://github.com/<your-username>/<your-repo>.git
+cd <your-repo>
+
+# 2.
 
 Install Terraform. Installation instructions available at:
-
 https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
 
+# 3.
 
-Step 2
+Create a project and bucket in Google Cloud Service and configure authentication. Authentication instructions available at:
+https://docs.cloud.google.com/sdk/gcloud/reference/auth/application-default/login
 
-Create a project and bucket in Google Cloud Service
+# 4.
 
-Step 3
+If needed, review additional documentation on configuring GitHub Actions with Google Cloud Storage:
+https://github.com/google-github-actions/upload-cloud-storage
 
-Create local authentication credentials on your local shell for your user account:
+# 5.
 
-"gcloud auth application-default login"
+Create a TF_DEMO_READER custom role in Snowflake:
 
-Step 4
+create role TF_DEMO_READER;
+grant role TF_DEMO_READER to user MY_ROLE;
 
+# 6.
+
+Authenticate Snowflake via Private Key (key-pair) screts uploaded to Github Actions. Instructions available at:
+https://docs.snowflake.com/en/user-guide/key-pair-auth#configuring-key-pair-authentication
+
+**SNOWFLAKE_PRIVATE_KEY**: This is your private key you use to authenticate to Snowflake via key-pair authentication.
+
+# 7. 
+
+Run Terraform:
+terraform -chdir=./prod fmt -recursive
+terraform -chdir=./prod validate
+terraform -chdir=./prod plan
+terraform -chdir=./prod apply -auto-approve
