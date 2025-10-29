@@ -38,3 +38,6 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# Ignore RSA key files
+*sf_rsa_key*

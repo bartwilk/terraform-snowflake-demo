@@ -9,19 +9,13 @@ https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
 
 Step 2
 
-Create a project and bucker in Google Cloud Service
+Create a project and bucket in Google Cloud Service
 
-#bash
+Step 3
 
-PROJECT_ID=your-project
-BUCKET=your-tf-state-bucket
-LOCATION=us-central1
+Create local authentication credentials on your local shell for your user account:
 
-gcloud config set project "$PROJECT_ID"
-gsutil mb -l "$LOCATION" "
-gsutil "gs://tf-state-bucket10001"
+"gcloud auth application-default login"
 
-Step 3 
-
-Initialize GCS by running gcloud init
+Step 4
 

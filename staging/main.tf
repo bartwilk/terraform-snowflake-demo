@@ -2,7 +2,7 @@ terraform {
   required_providers {
     snowflake = {
       source  = "Snowflake-Labs/snowflake"
-      version = "0.63.0"
+      version = "0.66.2"
     }
   }
 
@@ -16,7 +16,8 @@ provider "snowflake" {
   username    = "BARTWILK"
   account     = "BMPXPNG-PDB39891"
   role        = "ACCOUNTADMIN"
-  private_key = var.snowflake_private_key
+  private_key            = file("../sf_rsa_key.p8")
+  private_key_passphrase = file("../passphrase.tfvars")
 }
 
 module "snowflake_resources" {
