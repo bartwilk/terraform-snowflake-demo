@@ -14,8 +14,10 @@ This repository demonstrates a **CI/CD pipeline** for **Snowflake** using **Terr
 # 1. 
 
 Clone the repository
-git clone https://github.com/<your-username>/<your-repo>.git
-cd <your-repo>
+```
+git clone https://github.com/your-username/your-repo.git
+cd your-repo
+```
 
 # 2.
 
@@ -35,9 +37,10 @@ https://github.com/google-github-actions/upload-cloud-storage
 # 5.
 
 Create a TF_DEMO_READER custom role in Snowflake:
-
+```
 create role TF_DEMO_READER;
 grant role TF_DEMO_READER to user MY_ROLE;
+```
 
 # 6.
 
@@ -49,7 +52,9 @@ https://docs.snowflake.com/en/user-guide/key-pair-auth#configuring-key-pair-auth
 # 7. 
 
 Run Terraform:
+```
 terraform -chdir=./prod fmt -recursive
 terraform -chdir=./prod validate
 terraform -chdir=./prod plan
 terraform -chdir=./prod apply -auto-approve
+```
