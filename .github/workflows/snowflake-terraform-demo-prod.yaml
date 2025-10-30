@@ -25,7 +25,6 @@ jobs:
         with:
           project_id: fluted-clock-476607-s7
           service_account: terraform-github@fluted-clock-476607-s7.iam.gserviceaccount.com
-          create_credentials_file: true   # makes a creds file for ADC (used by Terraform)
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
