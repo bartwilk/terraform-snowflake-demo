@@ -7,7 +7,6 @@ terraform {
   }
 
  backend "gcs" {
-    bucket = "tf-state-bucket10001"
     prefix = "staging"
   }
 }

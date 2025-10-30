@@ -33,7 +33,9 @@ jobs:
         run: |
           # If you keep backend settings in ./staging/backend.hcl, use:
           # terraform -chdir=./staging init -reconfigure -backend-config=backend.hcl
-          terraform -chdir=./staging init
+          terraform -chdir=./staging init \
+            -backend-config="bucket=${{ secrets.GCS_BUCKET }}" \
+            -reconfigure
 
       - name: Terraform Format
         id: fmt
