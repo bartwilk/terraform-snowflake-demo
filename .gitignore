@@ -44,3 +44,6 @@ terraform.rc
 
 # Ignore GCP-SA JSON file
 *gcp-sa.json*
+
+# Ignore .vscode folder
+*/.vscode/*

@@ -10,15 +10,15 @@ jobs:
     name: "Deploy Terraform plan on Prod"
     runs-on: ubuntu-latest
     permissions:
-      contents: read               # required by auth action docs
-      id-token: write              # OIDC for Workload Identity Federation
-      pull-requests: write         # keep for PR comment
+      contents: read               
+      id-token: write              
+      pull-requests: write         
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Authenticate to Google Cloud (WIF)
+      # Authenticate to Google Cloud
       - id: auth
         name: "Authenticate to Google Cloud"
         uses: google-github-actions/auth@v3

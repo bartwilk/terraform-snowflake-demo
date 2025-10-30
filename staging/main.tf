@@ -13,9 +13,9 @@ terraform {
 }
 
 provider "snowflake" {
-  username               = "BARTWILK"
-  account                = "BMPXPNG-PDB39891"
-  role                   = "ACCOUNTADMIN"
+  username               = var.snowflake_username
+  account                = var.snowflake_account
+  role                   = var.snowflake_role
   private_key            = var.snowflake_private_key
   private_key_passphrase = var.snowflake_private_key_passphrase
 }

@@ -10,15 +10,15 @@ jobs:
     name: "Plan & Deploy Terraform plan on Staging"
     runs-on: ubuntu-latest
     permissions:
-      contents: read          # required for google-github-actions/auth
-      id-token: write         # enables GitHub OIDC for Workload Identity Federation
-      pull-requests: write    # kept from your original (even though not used here)
+      contents: read          
+      id-token: write         
+      pull-requests: write 
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Authenticate to Google Cloud using OIDC (short-lived credentials)
+      # Authenticate to Google Cloud
       - id: auth
         name: "Authenticate to Google Cloud"
         uses: google-github-actions/auth@v3
