@@ -56,7 +56,7 @@ LOCATION="<enter your region>"
 gcloud storage buckets create gs://$BUCKET --project $PROJECT_ID --location $LOCATION --uniform-bucket-level-access
 ```
 
-### Strongly recommended: enable versioning for safe rollbacks of state
+#### Strongly recommended: enable versioning for safe rollbacks of state
 ```
 gsutil versioning set on gs://$BUCKET
 ```
