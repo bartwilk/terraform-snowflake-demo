@@ -19,8 +19,8 @@ provider "snowflake" {
   username               = "BARTWILK"
   account                = "BMPXPNG-PDB39891"
   role                   = "ACCOUNTADMIN"
-  private_key            = file("../sf_rsa_key.p8")
-  private_key_passphrase = file("../passphrase.tfvars")
+  private_key            = "SNOWFLAKE_PRIVATE_KEY"
+  private_key_passphrase = "SNOWFLAKE_PASSPHRASE"
 }
 
 module "snowflake_resources" {
