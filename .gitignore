@@ -41,3 +41,6 @@ terraform.rc
 
 # Ignore RSA key files
 *sf_rsa_key*
+
+# Ignore GCP-SA JSON file
+*gcp-sa.json*

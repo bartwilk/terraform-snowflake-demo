@@ -35,7 +35,7 @@ jobs:
         id: init
         env:
           # Ensure Terraform (GCS backend) picks up the short-lived creds
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
         run: |
           # If you use per-env backend.hcl, add: -reconfigure -backend-config=backend.hcl
           terraform -chdir=./prod init
@@ -47,7 +47,7 @@ jobs:
       - name: Terraform Validate
         id: validate
         env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
         run: terraform -chdir=./prod validate -no-color
 
       - name: Terraform Plan on Prod for PR
@@ -55,7 +55,7 @@ jobs:
         if: github.event_name == 'pull_request'
         continue-on-error: true
         env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
           TF_VAR_snowflake_private_key: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
         run: terraform -chdir=./prod plan -no-color -input=false
 
@@ -97,6 +97,6 @@ jobs:
         id: apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
           TF_VAR_snowflake_private_key: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
         run: terraform -chdir=./prod apply -auto-approve -input=false
