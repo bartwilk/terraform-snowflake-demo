@@ -56,7 +56,7 @@ LOCATION="<enter your region>"
 gcloud storage buckets create gs://$BUCKET --project $PROJECT_ID --location $LOCATION --uniform-bucket-level-access
 ```
 
-#### Strongly recommended: enable versioning for safe rollbacks of state
+#### Strongly recommended: enable versioning for safe rollbacks of state:
 ```
 gsutil versioning set on gs://$BUCKET
 ```
@@ -70,7 +70,7 @@ SA_EMAIL="${SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
 gcloud iam service-accounts create $SA_NAME --project $PROJECT_ID
 ```
 
-#### 3. Grant object admin on the state bucket (read/write, including .tflock objects)
+#### 3. Grant object admin on the state bucket (read/write, including .tflock objects):
 ```
 gcloud storage buckets add-iam-policy-binding gs://$BUCKET \
   --member="serviceAccount:${SA_EMAIL}" \
