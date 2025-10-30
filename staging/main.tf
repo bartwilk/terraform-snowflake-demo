@@ -13,11 +13,11 @@ terraform {
 }
 
 provider "snowflake" {
-  username    = "BARTWILK"
-  account     = "BMPXPNG-PDB39891"
-  role        = "ACCOUNTADMIN"
-  private_key            = file("../sf_rsa_key.p8")
-  private_key_passphrase = file("../passphrase.tfvars")
+  username               = "BARTWILK"
+  account                = "BMPXPNG-PDB39891"
+  role                   = "ACCOUNTADMIN"
+  private_key            = var.snowflake_private_key
+  private_key_passphrase = var.snowflake_private_key_passphrase
 }
 
 module "snowflake_resources" {
