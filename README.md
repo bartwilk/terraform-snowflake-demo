@@ -70,14 +70,14 @@ SA_EMAIL="${SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
 gcloud iam service-accounts create $SA_NAME --project $PROJECT_ID
 ```
 
-### 3. Grant object admin on the state bucket (read/write, including .tflock objects)
+#### 3. Grant object admin on the state bucket (read/write, including .tflock objects)
 ```
 gcloud storage buckets add-iam-policy-binding gs://$BUCKET \
   --member="serviceAccount:${SA_EMAIL}" \
   --role="roles/storage.objectAdmin"
 ```
 
-### 4. Create and download a key, then load it into GitHub Secrets:
+#### 4. Create and download a key, then load it into GitHub Secrets:
 ```
 gcloud iam service-accounts keys create gcp-sa.json \
   --iam-account $SA_EMAIL \
