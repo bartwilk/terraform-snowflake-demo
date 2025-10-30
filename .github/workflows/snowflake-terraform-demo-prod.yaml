@@ -49,6 +49,9 @@ jobs:
         env:
           TF_VAR_snowflake_private_key: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
           TF_VAR_snowflake_private_key_passphrase: ${{ secrets.SNOWFLAKE_PASSPHRASE }}
+          TF_VAR_snowflake_username: ${{ secrets.SNOWFLAKE_USERNAME }}
+          TF_VAR_snowflake_account: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          TF_VAR_snowflake_role: ${{ secrets.SNOWFLAKE_ROLE }}
         run: terraform -chdir=./prod plan -no-color -input=false
 
       - name: Update Pull Request
@@ -91,4 +94,7 @@ jobs:
         env:
           TF_VAR_snowflake_private_key: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
           TF_VAR_snowflake_private_key_passphrase: ${{ secrets.SNOWFLAKE_PASSPHRASE }}
+          TF_VAR_snowflake_username: ${{ secrets.SNOWFLAKE_USERNAME }}
+          TF_VAR_snowflake_account: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          TF_VAR_snowflake_role: ${{ secrets.SNOWFLAKE_ROLE }}
         run: terraform -chdir=./prod apply -auto-approve -input=false

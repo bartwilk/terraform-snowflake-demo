@@ -8,17 +8,14 @@ terraform {
 
   backend "gcs" {
     bucket = "tf-state-bucket10001"
-    prefix = "prod" # state stored at gs://<bucket>/prod/<workspace>.tfstate
-    # optional:
-    # impersonate_service_account = "terraform@YOUR_PROJECT_ID.iam.gserviceaccount.com"
-    # encryption_key             = "BASE64_32_BYTE_CUSTOMER_SUPPLIED_KEY"
+    prefix = "prod"
   }
 }
 
 provider "snowflake" {
-  username               = "BARTWILK"
-  account                = "BMPXPNG-PDB39891"
-  role                   = "ACCOUNTADMIN"
+  username               = var.snowflake_username
+  account                = var.snowflake_account
+  role                   = var.snowflake_role
   private_key            = var.snowflake_private_key
   private_key_passphrase = var.snowflake_private_key_passphrase
 }

@@ -19,3 +19,23 @@ variable "snowflake_private_key_passphrase" {
   description = "Passphrase used to access Snowflake"
   sensitive   = true
 }
+
+variable "snowflake_username" {
+  type        = string
+  description = "Username used to access Snowflake"
+  sensitive   = true
+}
+
+variable "snowflake_account" {
+  type        = string
+  description = "Account ID used to access Snowflake"
+  sensitive   = true
+}
+
+variable "snowflake_role" {
+  type        = string
+  description = "Role ID used to access Snowflake"
+  sensitive   = true
+}
+
+
