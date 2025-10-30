@@ -8,6 +8,12 @@ variable "env_name" {
   default = "PROD"
 }
 
+variable "gcs_bucket" {
+  type        = string
+  description = "Bucket used in GCS"
+  sensitive   = true
+}
+
 variable "snowflake_private_key" {
   type        = string
   description = "Private key used to access Snowflake"
