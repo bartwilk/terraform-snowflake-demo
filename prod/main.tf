@@ -8,7 +8,7 @@ terraform {
 
   backend "gcs" {
     # bucket = "tf-state-bucket10001"
-    bucket = var.gcs_bucket
+    # bucket = var.gcs_bucket
     prefix = "prod"
   }
 }

@@ -32,7 +32,9 @@ jobs:
         id: init
         run: |
           # If you use per-env backend.hcl, add: -reconfigure -backend-config=backend.hcl
-          terraform -chdir=./prod init
+          terraform -chdir=./prod init \
+            -backend-config="bucket=${{ secrets.GCS_BUCKET }}" \
+            -reconfigure
 
       - name: Terraform Format
         id: fmt
