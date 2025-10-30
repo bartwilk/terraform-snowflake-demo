@@ -48,6 +48,7 @@ jobs:
         continue-on-error: true
         env:
           TF_VAR_snowflake_private_key: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+          TF_VAR_private_key_passphrase: ${{ secrets.SNOWFLAKE_PASSPHRASE }}
         run: terraform -chdir=./prod plan -no-color -input=false
 
       - name: Update Pull Request
@@ -89,4 +90,5 @@ jobs:
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         env:
           TF_VAR_snowflake_private_key: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+          TF_VAR_private_key_passphrase: ${{ secrets.SNOWFLAKE_PASSPHRASE }}
         run: terraform -chdir=./prod apply -auto-approve -input=false
