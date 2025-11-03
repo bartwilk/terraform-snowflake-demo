@@ -65,8 +65,10 @@ gcloud iam service-accounts keys create gcp-sa.json \
 https://github.com/google-github-actions/upload-cloud-storage
 
 ### Configure the following Secrets in GitHub under Settings -> Actions -> Secrets:
+```
 GCP_SA_KEY
 GCS_BUCKET
+```
 
 ## 4. Create a TF_DEMO_READER custom role in Snowflake:
 ```
@@ -78,11 +80,13 @@ grant role TF_DEMO_READER to user MY_ROLE;
 https://docs.snowflake.com/en/user-guide/key-pair-auth#configuring-key-pair-authentication
 
 ### Configure the following Secrets in GitHub under Settings -> Actions -> Secrets:
+```
 SNOWFLAKE_ACCOUNT
 SNOWFLAKE_ROLE
 SNOWFLAKE_USERNAME
 SNOWFLAKE_PRIVATE_KEY
 SNOWFLAKE_PASSPHRASE
+```
 
 ## 6. (Optional) Run Terraform Locally:
 ```
